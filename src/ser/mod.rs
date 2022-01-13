@@ -345,7 +345,7 @@ impl<'a, 'b: 'a> ser::Serializer for &'a mut Serializer<'b> {
     }
 
     fn serialize_newtype_variant<T: ?Sized>(
-        mut self,
+        self,
         _name: &'static str,
         _variant_index: u32,
         variant: &'static str,
@@ -355,7 +355,7 @@ impl<'a, 'b: 'a> ser::Serializer for &'a mut Serializer<'b> {
         T: ser::Serialize,
     {
         self.push(b'{')?;
-        let mut s = SerializeStruct::new(&mut self);
+        let mut s = SerializeStruct::new(self);
         s.serialize_field(variant, value)?;
         s.end()?;
         Ok(())
