@@ -1,8 +1,8 @@
 //! Deserialize JSON data to a Rust data structure
 
-use core::str::FromStr;
 use core::{fmt, str};
 
+use fast_float;
 use serde::de::{self, Visitor};
 
 use self::enum_::{UnitVariantAccess, VariantAccess};
@@ -325,7 +325,7 @@ macro_rules! deserialize_fromstr {
         // caller has guaranteed that `pattern` contains only ascii characters.
         let s = unsafe { str::from_utf8_unchecked(&$self.slice[start..$self.index]) };
 
-        let v = $typ::from_str(s).or(Err(Error::InvalidNumber))?;
+        let v: $typ = fast_float::parse(s).or(Err(Error::InvalidNumber))?;
 
         $visitor.$visit_fn(v)
     }};
